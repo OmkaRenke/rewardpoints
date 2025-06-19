@@ -89,3 +89,6 @@ Action:
 
 Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
 
+19-Jun-2025 10:56:03 INFO - Initializing Spring DispatcherServlet 'dispatcherServlet'
+19-Jun-2025 10:56:03 INFO - Initializing Servlet 'dispatcherServlet'
+19-Jun-2025 10:56:03 INFO - Completed initialization in 3 ms
