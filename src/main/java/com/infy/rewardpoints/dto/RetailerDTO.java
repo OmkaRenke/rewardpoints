@@ -7,6 +7,7 @@ import lombok.Data;
 public class RetailerDTO {
 	@NotNull(message= "{retailer.name.absent}")
 	private String name;
+	private long retailerId;
 	private String email;
 	private String contact;
 	public String getName() {
@@ -26,6 +27,12 @@ public class RetailerDTO {
 	}
 	public void setContact(String contact) {
 		this.contact = contact;
+	}
+	public long getRetailerId() {
+		return retailerId;
+	}
+	public void setRetailerId(long retailerId) {
+		this.retailerId = retailerId;
 	}
 	
 }

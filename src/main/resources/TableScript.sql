@@ -22,16 +22,17 @@ CREATE TABLE customer (
 CREATE TABLE transaction (
     transaction_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     transaction_number VARCHAR(100) UNIQUE,
+    transaction_mode VARCHAR(100),
     amount DECIMAL(10,2) NOT NULL,
     transaction_date TIMESTAMP NOT NULL,
     	points_earned INT NOT NULL DEFAULT 0,
-    retailer_id BIGINT NOT NULL REFERENCES retailer(retailer_id),
     customer_id BIGINT NOT NULL REFERENCES customer(customer_id)
 );
 
 
 INSERT INTO retailer VALUES(100,"Jack","jack@gmail.com","9876564326");
 INSERT INTO customer VALUES(200,"Kevin","Kevin@gmail.com","9623456785",100);
+INSERT INTO customer VALUES(201,"Ken","Ken@gmail.com","3454354678",100);
 
 SELECT * FROM retailer;
 SELECT * FROM customer;

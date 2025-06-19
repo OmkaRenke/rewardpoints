@@ -19,6 +19,9 @@ import com.infy.rewardpoints.exception.RewardPointsException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @RestControllerAdvice
 public class ExceptionControllerAdvice{
 	
@@ -59,6 +62,26 @@ public class ExceptionControllerAdvice{
 		
 		return new ResponseEntity<>(errorInfo,HttpStatus.BAD_REQUEST);
 		
+	}
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<ErrorInfo> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+	    LOGGER.error("Data integrity violation", ex);
+
+	    String rootMessage = ex.getRootCause() != null ? ex.getRootCause().getMessage() : ex.getMessage();
+
+	    String errorMessage;
+	    if (rootMessage.contains("Duplicate entry") && rootMessage.contains("transaction.transaction_number")) {
+	    	errorMessage = environment.getProperty("Transaction.DUPLICATE_TRANSACTION_NUMBER");
+	    	 
+	    } else {
+	    	errorMessage = environment.getProperty("Transaction.DATA_INTEGRITY");
+	    }
+
+	    ErrorInfo errorInfo = new ErrorInfo();
+	    errorInfo.setErrorCode(HttpStatus.CONFLICT.value()); 
+	    errorInfo.setErrorMessage(errorMessage);
+
+	    return new ResponseEntity<>(errorInfo, HttpStatus.CONFLICT);
 	}
 	
 }

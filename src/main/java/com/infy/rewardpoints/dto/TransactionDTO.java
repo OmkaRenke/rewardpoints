@@ -1,17 +1,18 @@
 package com.infy.rewardpoints.dto;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import lombok.Data;
 
 @Data
 public class TransactionDTO {
+	private long transactionId;
 	private String transactionNumber;
+	private String transactionMode;
 	private BigDecimal amount;
 	 private Timestamp transactionDate;
 	 private int pointsEarned;
-	private RetailerDTO retailerDTO;
 	private CustomerDTO customerDTO;
 	public String getTransactionNumber() {
 		return transactionNumber;
@@ -37,17 +38,23 @@ public class TransactionDTO {
 	public void setPointsEarned(int pointsEarned) {
 		this.pointsEarned = pointsEarned;
 	}
-	public RetailerDTO getRetailerDTO() {
-		return retailerDTO;
-	}
-	public void setRetailerDTO(RetailerDTO retailerDTO) {
-		this.retailerDTO = retailerDTO;
-	}
 	public CustomerDTO getCustomerDTO() {
 		return customerDTO;
 	}
 	public void setCustomerDTO(CustomerDTO customerDTO) {
 		this.customerDTO = customerDTO;
+	}
+	public String getTransactionMode() {
+		return transactionMode;
+	}
+	public void setTransactionMode(String transactionMode) {
+		this.transactionMode = transactionMode;
+	}
+	public long getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(long transactionId) {
+		this.transactionId = transactionId;
 	}
 	
 }

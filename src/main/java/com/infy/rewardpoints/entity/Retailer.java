@@ -11,7 +11,7 @@ import lombok.Data;
 public class Retailer {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long retailerId;
 	
 	private String name;

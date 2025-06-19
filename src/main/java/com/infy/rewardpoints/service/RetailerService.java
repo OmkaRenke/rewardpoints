@@ -13,5 +13,5 @@ public interface RetailerService {
 	
 	public List<CustomerDTO> viewCustomerDetails(long retailerId) throws RewardPointsException;
 	
-	//public List<TransactionDTO> transactionUnderRetailer(long retailerId);
+	public List<TransactionDTO> transactionUnderRetailer(long retailerId) throws RewardPointsException;
 }
