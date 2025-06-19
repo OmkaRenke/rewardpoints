@@ -1,0 +1,91 @@
+18-Jun-2025 20:57:27 INFO - Application shutdown requested.
+18-Jun-2025 20:57:27 INFO - Commencing graceful shutdown. Waiting for active requests to complete
+18-Jun-2025 20:57:27 INFO - Pausing ProtocolHandler ["http-nio-8080"]
+18-Jun-2025 20:57:27 INFO - Graceful shutdown complete
+18-Jun-2025 20:57:27 INFO - Stopping ProtocolHandler ["http-nio-8080"]
+18-Jun-2025 20:57:27 INFO - Closing JPA EntityManagerFactory for persistence unit 'default'
+18-Jun-2025 20:57:27 INFO - HikariPool-1 - Shutdown initiated...
+18-Jun-2025 20:57:27 INFO - HikariPool-1 - Shutdown completed.
+19-Jun-2025 10:55:02 INFO - HV000001: Hibernate Validator 8.0.2.Final
+19-Jun-2025 10:55:02 INFO - HV000001: Hibernate Validator 8.0.2.Final
+19-Jun-2025 10:55:02 INFO - Starting RewardpointsApplication using Java 21.0.7 with PID 5224 (C:\Users\Lappy Care\Downloads\rewardpoints\target\classes started by Lappy Care in C:\Users\Lappy Care\Downloads\rewardpoints)
+19-Jun-2025 10:55:02 INFO - No active profile set, falling back to 1 default profile: "default"
+19-Jun-2025 10:55:03 INFO - Starting RewardpointsApplication using Java 21.0.7 with PID 4536 (C:\Users\Lappy Care\Downloads\rewardpoints\target\classes started by Lappy Care in C:\Users\Lappy Care\Downloads\rewardpoints)
+19-Jun-2025 10:55:03 INFO - No active profile set, falling back to 1 default profile: "default"
+19-Jun-2025 10:55:06 INFO - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+19-Jun-2025 10:55:06 INFO - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+19-Jun-2025 10:55:06 INFO - Finished Spring Data repository scanning in 156 ms. Found 3 JPA repository interfaces.
+19-Jun-2025 10:55:06 INFO - Finished Spring Data repository scanning in 230 ms. Found 3 JPA repository interfaces.
+19-Jun-2025 10:55:08 INFO - Tomcat initialized with port 8080 (http)
+19-Jun-2025 10:55:08 INFO - Initializing ProtocolHandler ["http-nio-8080"]
+19-Jun-2025 10:55:08 INFO - Starting service [Tomcat]
+19-Jun-2025 10:55:08 INFO - Starting Servlet engine: [Apache Tomcat/10.1.41]
+19-Jun-2025 10:55:08 INFO - Tomcat initialized with port 8080 (http)
+19-Jun-2025 10:55:08 INFO - Initializing ProtocolHandler ["http-nio-8080"]
+19-Jun-2025 10:55:08 INFO - Starting service [Tomcat]
+19-Jun-2025 10:55:08 INFO - Starting Servlet engine: [Apache Tomcat/10.1.41]
+19-Jun-2025 10:55:08 INFO - Initializing Spring embedded WebApplicationContext
+19-Jun-2025 10:55:08 INFO - Root WebApplicationContext: initialization completed in 5617 ms
+19-Jun-2025 10:55:08 INFO - Initializing Spring embedded WebApplicationContext
+19-Jun-2025 10:55:08 INFO - Root WebApplicationContext: initialization completed in 5529 ms
+19-Jun-2025 10:55:09 INFO - HikariPool-1 - Starting...
+19-Jun-2025 10:55:09 INFO - HikariPool-1 - Starting...
+19-Jun-2025 10:55:10 INFO - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@388f1258
+19-Jun-2025 10:55:10 INFO - HikariPool-1 - Start completed.
+19-Jun-2025 10:55:10 INFO - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@388f1258
+19-Jun-2025 10:55:10 INFO - HikariPool-1 - Start completed.
+19-Jun-2025 10:55:10 INFO - HHH000204: Processing PersistenceUnitInfo [name: default]
+19-Jun-2025 10:55:10 INFO - HHH000204: Processing PersistenceUnitInfo [name: default]
+19-Jun-2025 10:55:10 INFO - HHH000412: Hibernate ORM core version 6.6.15.Final
+19-Jun-2025 10:55:10 INFO - HHH000412: Hibernate ORM core version 6.6.15.Final
+19-Jun-2025 10:55:10 INFO - HHH000026: Second-level cache disabled
+19-Jun-2025 10:55:11 INFO - HHH000026: Second-level cache disabled
+19-Jun-2025 10:55:11 INFO - No LoadTimeWeaver setup: ignoring JPA class transformer
+19-Jun-2025 10:55:12 INFO - No LoadTimeWeaver setup: ignoring JPA class transformer
+19-Jun-2025 10:55:12 INFO - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.42
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+19-Jun-2025 10:55:12 INFO - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.42
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+19-Jun-2025 10:55:14 INFO - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+19-Jun-2025 10:55:14 INFO - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+19-Jun-2025 10:55:14 INFO - Initialized JPA EntityManagerFactory for persistence unit 'default'
+19-Jun-2025 10:55:14 INFO - Initialized JPA EntityManagerFactory for persistence unit 'default'
+19-Jun-2025 10:55:15 WARN - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+19-Jun-2025 10:55:15 WARN - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+19-Jun-2025 10:55:17 INFO - Starting ProtocolHandler ["http-nio-8080"]
+19-Jun-2025 10:55:17 INFO - Tomcat started on port 8080 (http) with context path '/'
+19-Jun-2025 10:55:17 INFO - Starting ProtocolHandler ["http-nio-8080"]
+19-Jun-2025 10:55:17 INFO - Started RewardpointsApplication in 15.505 seconds (process running for 18.465)
+19-Jun-2025 10:55:17 WARN - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+19-Jun-2025 10:55:17 INFO - Closing JPA EntityManagerFactory for persistence unit 'default'
+19-Jun-2025 10:55:17 INFO - HikariPool-1 - Shutdown initiated...
+19-Jun-2025 10:55:17 INFO - HikariPool-1 - Shutdown completed.
+19-Jun-2025 10:55:17 INFO - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+19-Jun-2025 10:55:17 ERROR - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
