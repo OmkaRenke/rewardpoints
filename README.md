@@ -1,4 +1,4 @@
-# Reward Points System
+# Reward Points System V1.0
 
 Spring Boot-based RESTful API that calculates and manages reward points 
 
@@ -36,7 +36,23 @@ Spring Boot-based RESTful API that calculates and manages reward points
 ####  Save Transaction
 ```http
 POST /rewardpoint/save/transaction
+
+Sample Request Body
+ 
+{
+  "transactionNumber": "TXN011",
+  "transactionMode": "UPI",
+  "amount": 150.00,
+  "transactionDate": "2025-06-19T10:00:00",
+  "retailerDTO": {
+    "retailerId": 100
+  },
+  "customerDTO": {
+    "customerId": 201
+  }
+}
 ```
+
 #### Get All Customers Under Retailer
 ```http
 GET /rewardpoint/retailer/customers/{retailerId}
@@ -55,5 +71,5 @@ GET /rewardpoint/customer/summary?customerId=200&startDate=2025-04-01&endDate=20
 ```
 ####  Customer Reward Summary by RetailorId
 ```http 
-GET rewardpoint/retailer/summary?retailerId=200&startDate=2025-04-01&endDate=2025-06-30
+GET /rewardpoint/retailer/summary?retailerId=200&startDate=2025-04-01&endDate=2025-06-30
 ```
