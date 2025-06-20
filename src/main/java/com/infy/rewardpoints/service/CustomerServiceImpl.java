@@ -31,10 +31,6 @@ public class CustomerServiceImpl implements CustomerService {
 		return 0;
 	}
 
-	@Override
-	public List<TransactionDTO> transactionUnderCustomer(long customerId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	
 }

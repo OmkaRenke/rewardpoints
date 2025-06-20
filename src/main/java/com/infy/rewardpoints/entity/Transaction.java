@@ -3,9 +3,6 @@ package com.infy.rewardpoints.entity;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import com.infy.rewardpoints.dto.CustomerDTO;
-import com.infy.rewardpoints.dto.RetailerDTO;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,10 +23,7 @@ public class Transaction {
 	private BigDecimal amount;
 	private Timestamp transactionDate;
 	private int pointsEarned;
-	
-//	@ManyToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "retailer_id")
-//	private Retailer retailer;
+
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "customer_id")

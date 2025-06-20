@@ -201,23 +201,9 @@ private ModelMapper modelMapper = new ModelMapper();
 		});
 		
 		if(summaryDTOs.isEmpty()) {
-			throw new RewardPointsException("SService.TRANSACTIONS_NOT_FOUND");
+			throw new RewardPointsException("Service.TRANSACTIONS_NOT_FOUND");
 		}
 		return summaryDTOs;
 	}
-
-
-
-
-
-	
-
-	
-
-
-	
-
-
-	
 
 }

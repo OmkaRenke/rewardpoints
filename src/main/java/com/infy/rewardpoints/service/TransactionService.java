@@ -1,14 +1,9 @@
 package com.infy.rewardpoints.service;
 
-import java.sql.Timestamp;
 import java.util.List;
-
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.infy.rewardpoints.dto.CustomerRewardSummaryDTO;
 import com.infy.rewardpoints.dto.TransactionDTO;
-import com.infy.rewardpoints.entity.Transaction;
 import com.infy.rewardpoints.exception.RewardPointsException;
 
 public interface TransactionService  {

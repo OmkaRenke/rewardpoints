@@ -1,5 +1,7 @@
 package com.infy.rewardpoints.api;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +74,7 @@ public class RewardPointsAPI {
 		
 		return new ResponseEntity<>(transactionDtos,HttpStatus.OK);
 	}
+	
 	//http://localhost:8080/rewardpoint/customer/summary?customerId=200&startDate=2025-04-01&endDate=2025-06-30
 	@GetMapping("/customer/summary")
 	public ResponseEntity<CustomerRewardSummaryDTO> getAllCustomerRewardSummaries(
@@ -79,6 +82,23 @@ public class RewardPointsAPI {
             @RequestParam String startDate,
             @RequestParam String endDate
 			) throws RewardPointsException {
+		
+		LocalDate start;
+	    LocalDate end;
+	    try {
+	        start = LocalDate.parse(startDate);
+	        end = LocalDate.parse(endDate);
+	    } catch (DateTimeParseException ex) {
+	        throw new RewardPointsException("Service.INVALID_DATE_FORMAT");
+	    }
+
+	    if (start.isAfter(end)) {
+	        throw new RewardPointsException("Service.START_DATE_AFTER_END");
+	    }
+		
+		
+		
+		
 	 CustomerRewardSummaryDTO response = transactionService.getCustomerRewardsLast3Months(customerId,startDate,endDate);
 	    return new ResponseEntity<>(response,HttpStatus.OK);
 	}
@@ -91,6 +111,19 @@ public class RewardPointsAPI {
             @RequestParam String startDate,
             @RequestParam String endDate
 			) throws RewardPointsException{
+		
+		LocalDate start;
+	    LocalDate end;
+	    try {
+	        start = LocalDate.parse(startDate);
+	        end = LocalDate.parse(endDate);
+	    } catch (DateTimeParseException ex) {
+	        throw new RewardPointsException("Service.INVALID_DATE_FORMAT");
+	    }
+
+	    if (start.isAfter(end)) {
+	        throw new RewardPointsException("Service.START_DATE_AFTER_END");
+	    }
 		
 		List<CustomerRewardSummaryDTO> response = transactionService.getAllCustomerRewardsByRetailerId(retailerId,startDate,endDate);
 	    return new ResponseEntity<>(response,HttpStatus.OK);
