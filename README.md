@@ -140,13 +140,13 @@ Transaction saved successfully:7
     "pointsEarned": 0
   },
   {
-        "transactionId": 8,
-        "transactionNumber": "TXN05",
-        "transactionMode": "UPI",
-        "amount": 190.00,
-        "transactionDate": "2025-05-19T10:00:00.000+00:00",
-        "pointsEarned": 230
-    }
+    "transactionId": 8,
+    "transactionNumber": "TXN05",
+    "transactionMode": "UPI",
+    "amount": 190.00,
+    "transactionDate": "2025-05-19T10:00:00.000+00:00",
+    "pointsEarned": 230
+   }
 ]
 ```
 
