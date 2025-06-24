@@ -10,7 +10,7 @@ public class CustomerDTO {
 	private long customerId;
 	private String email;
 	private String contact;
-	private RetailerDTO retailerDTO;
+	
 	public String getName() {
 		return name;
 	}
@@ -29,12 +29,7 @@ public class CustomerDTO {
 	public void setContact(String contact) {
 		this.contact = contact;
 	}
-	public RetailerDTO getRetailerDTO() {
-		return retailerDTO;
-	}
-	public void setRetailerDTO(RetailerDTO retailerDTO) {
-		this.retailerDTO = retailerDTO;
-	}
+	
 	public long getCustomerId() {
 		return customerId;
 	}

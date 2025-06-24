@@ -6,14 +6,13 @@ import java.sql.Timestamp;
 import lombok.Data;
 
 @Data
-public class TransactionDTO {
+public class TransactionResponseDTO {
 	private long transactionId;
 	private String transactionNumber;
 	private String transactionMode;
 	private BigDecimal amount;
 	private Timestamp transactionDate;
 	private int pointsEarned;
-	private CustomerDTO customerDTO;
 
 	public String getTransactionNumber() {
 		return transactionNumber;
@@ -47,14 +46,6 @@ public class TransactionDTO {
 		this.pointsEarned = pointsEarned;
 	}
 
-	public CustomerDTO getCustomerDTO() {
-		return customerDTO;
-	}
-
-	public void setCustomerDTO(CustomerDTO customerDTO) {
-		this.customerDTO = customerDTO;
-	}
-
 	public String getTransactionMode() {
 		return transactionMode;
 	}
@@ -70,5 +61,4 @@ public class TransactionDTO {
 	public void setTransactionId(long transactionId) {
 		this.transactionId = transactionId;
 	}
-
 }

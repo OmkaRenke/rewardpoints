@@ -9,6 +9,7 @@ public class MonthlyPointsDTO {
 	private String month; 
     private int points;
     private List<TransactionDTO> transactioList;
+    
 	public String getMonth() {
 		return month;
 	}

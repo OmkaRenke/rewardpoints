@@ -1,14 +1,9 @@
 package com.infy.rewardpoints.entity;
 
-import com.infy.rewardpoints.dto.RetailerDTO;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
@@ -17,14 +12,10 @@ public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long customerId;
-	
+
 	private String name;
 	private String email;
 	private String contact;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="retailer_id")
-	private Retailer retailer;
 
 	public long getCustomerId() {
 		return customerId;
@@ -58,12 +49,4 @@ public class Customer {
 		this.contact = contact;
 	}
 
-	public Retailer getRetailer() {
-		return retailer;
-	}
-
-	public void setRetailer(Retailer retailer) {
-		this.retailer = retailer;
-	}
-	
 }

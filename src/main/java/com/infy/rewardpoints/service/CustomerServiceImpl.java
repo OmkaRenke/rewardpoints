@@ -21,13 +21,11 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Autowired
 	private CustomerRepository customerRepository;
-	
-	@Autowired
-	private TransactionRepository transactionRepository;
+
 	
 	@Override
 	public long registerCustomer(CustomerDTO customerDTO) {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
