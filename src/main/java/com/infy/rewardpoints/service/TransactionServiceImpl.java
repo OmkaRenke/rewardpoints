@@ -112,7 +112,10 @@ public class TransactionServiceImpl implements TransactionService {
 		if (start.isAfter(end)) {
 			throw new RewardPointsException("Service.START_DATE_AFTER_END");
 		}
-
+		 LocalDate today = LocalDate.now();
+		    if (start.isAfter(today) || end.isAfter(today)) {
+		        throw new RewardPointsException("Service.DATE_IN_FUTURE_NOT_ALLOWED");
+		    }
 		Optional<Customer> optCustomer = customerRepository.findById(customerId);
 		Customer customer = optCustomer.orElseThrow(() -> new RewardPointsException("Service.CUSTOMER_NOT_FOUND"));
 
