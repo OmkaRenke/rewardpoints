@@ -2,12 +2,13 @@ package com.infy.rewardpoints.service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,18 +17,22 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.infy.rewardpoints.dto.CustomerRewardSummaryDTO;
-import com.infy.rewardpoints.dto.MonthlyPointsDTO;
-import com.infy.rewardpoints.dto.TransactionDTO;
-import com.infy.rewardpoints.dto.TransactionResponseDTO;
-import com.infy.rewardpoints.entity.Customer;
-import com.infy.rewardpoints.entity.Transaction;
 import com.infy.rewardpoints.exception.RewardPointsException;
+import com.infy.rewardpoints.models.Customer;
+import com.infy.rewardpoints.models.CustomerRewardSummaryMapper;
+import com.infy.rewardpoints.models.MonthlyPointsMapper;
+import com.infy.rewardpoints.models.Transaction;
+import com.infy.rewardpoints.models.TransactionDTO;
+import com.infy.rewardpoints.models.TransactionResponseMapper;
 import com.infy.rewardpoints.repository.CustomerRepository;
 import com.infy.rewardpoints.repository.TransactionRepository;
 
 import jakarta.transaction.Transactional;
 
+/**
+ * Service implementation for handling transaction operations and reward point
+ * calculations.
+ */
 @Service(value = "transactionService")
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
@@ -39,26 +44,32 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	private TransactionRepository transactionRepository;
 
+	/**
+	 * Retrieves all transactions made by a specific customer.
+	 */
 	@Override
-	public List<TransactionResponseDTO> getTransactionsByCustomerId(long customerId) throws RewardPointsException {
+	public List<TransactionResponseMapper> getTransactionsByCustomerId(long customerId) throws RewardPointsException {
 		Optional<Customer> optCustomer = customerRepository.findById(customerId);
 		Customer customer = optCustomer.orElseThrow(() -> new RewardPointsException("Service.CUSTOMER_NOT_FOUND"));
-
 		List<Transaction> transactionList = transactionRepository.findByCustomerCustomerId(customerId);
 		if (transactionList.isEmpty()) {
 			throw new RewardPointsException("Service.TRANSACTIONS_NOT_FOUND");
 		}
 
-		List<TransactionResponseDTO> transactionDTOList = new ArrayList<>();
+		List<TransactionResponseMapper> transactionDTOList = new ArrayList<>();
 
 		transactionList.stream().forEach(transaction -> {
-			TransactionResponseDTO transactionDTO = modelMapper.map(transaction, TransactionResponseDTO.class);
+			TransactionResponseMapper transactionDTO = modelMapper.map(transaction, TransactionResponseMapper.class);
 			transactionDTOList.add(transactionDTO);
 
 		});
 		return transactionDTOList;
 	}
 
+	/**
+	 * Saves a new transaction and calculates reward points based on the transaction
+	 * amount.
+	 */
 	@Override
 	public long saveTransaction(TransactionDTO transactionDTO) throws RewardPointsException {
 		Optional<Customer> optCustomer = customerRepository.findById(transactionDTO.getCustomerDTO().getCustomerId());
@@ -82,8 +93,12 @@ public class TransactionServiceImpl implements TransactionService {
 		return transaction.getTransactionId();
 	}
 
+	/**
+	 * Calculates reward summary for the customer over the last 3 months (or given
+	 * date range).
+	 */
 	@Override
-	public CustomerRewardSummaryDTO getCustomerRewardsLast3Months(long customerId, String startDate, String endDate)
+	public CustomerRewardSummaryMapper getCustomerRewardsLast3Months(long customerId, String startDate, String endDate)
 			throws RewardPointsException {
 		LocalDate start;
 		LocalDate end;
@@ -100,11 +115,12 @@ public class TransactionServiceImpl implements TransactionService {
 
 		Optional<Customer> optCustomer = customerRepository.findById(customerId);
 		Customer customer = optCustomer.orElseThrow(() -> new RewardPointsException("Service.CUSTOMER_NOT_FOUND"));
-		LocalDateTime startDateTime = LocalDate.parse(startDate).atStartOfDay();
-		LocalDateTime endDateTime = LocalDate.parse(endDate).atTime(LocalTime.MAX);
 
-		List<Transaction> transactionList = transactionRepository.findByCustomerCustomerIdAndTransactionDateBetween(
-				customerId, Timestamp.valueOf(startDateTime), Timestamp.valueOf(endDateTime));
+		Timestamp startTimestamp = Timestamp.valueOf(start.atStartOfDay());
+		Timestamp endTimestamp = Timestamp.valueOf(end.atTime(LocalTime.MAX));
+
+		List<Transaction> transactionList = transactionRepository
+				.findByCustomerCustomerIdAndTransactionDateBetween(customerId, startTimestamp, endTimestamp);
 		if (transactionList.isEmpty()) {
 
 			throw new RewardPointsException("Service.TRANSACTIONS_NOT_FOUND");
@@ -112,7 +128,7 @@ public class TransactionServiceImpl implements TransactionService {
 		Map<YearMonth, List<Transaction>> groupedBymonths = transactionList.stream()
 				.collect(Collectors.groupingBy(t -> YearMonth.from(t.getTransactionDate().toLocalDateTime())));
 
-		List<MonthlyPointsDTO> monthlyRewards = new ArrayList<>();
+		List<MonthlyPointsMapper> monthlyRewards = new ArrayList<>();
 		int totalPoints = 0;
 
 		for (Map.Entry<YearMonth, List<Transaction>> entry : groupedBymonths.entrySet()) {
@@ -121,11 +137,11 @@ public class TransactionServiceImpl implements TransactionService {
 
 			int monthPoints = monthTransactions.stream().mapToInt(t -> t.getPointsEarned()).sum();
 
-			List<TransactionDTO> dtoList = monthTransactions.stream()
-					.map(tx -> modelMapper.map(tx, TransactionDTO.class)).toList();
+			List<TransactionResponseMapper> dtoList = monthTransactions.stream()
+					.map(tx -> modelMapper.map(tx, TransactionResponseMapper.class)).toList();
 
-			MonthlyPointsDTO mpDTO = new MonthlyPointsDTO();
-			mpDTO.setMonth(ym.toString());
+			MonthlyPointsMapper mpDTO = new MonthlyPointsMapper();
+			mpDTO.setMonth(ym.format(DateTimeFormatter.ofPattern("yyyy - MMMM", Locale.ENGLISH)));
 			mpDTO.setPoints(monthPoints);
 			mpDTO.setTransactioList(dtoList);
 
@@ -133,7 +149,7 @@ public class TransactionServiceImpl implements TransactionService {
 			totalPoints += monthPoints;
 		}
 
-		CustomerRewardSummaryDTO response = new CustomerRewardSummaryDTO();
+		CustomerRewardSummaryMapper response = new CustomerRewardSummaryMapper();
 		response.setCustomerId(customer.getCustomerId());
 		response.setCustomerName(customer.getName());
 		response.setMonthlyRewards(monthlyRewards);
