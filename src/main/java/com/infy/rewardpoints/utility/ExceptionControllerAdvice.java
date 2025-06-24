@@ -25,12 +25,9 @@ import jakarta.validation.ConstraintViolationException;
  */
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
-
 	private static final Log LOGGER = LogFactory.getLog(ExceptionControllerAdvice.class);
-
 	@Autowired
 	private Environment environment;
-
 	/**
 	 * Handles custom {@link RewardPointsException} and maps to a user-friendly
 	 * error message.
@@ -41,11 +38,9 @@ public class ExceptionControllerAdvice {
 	@ExceptionHandler(RewardPointsException.class)
 	public ResponseEntity<ErrorInfo> handleRewardPointsException(RewardPointsException exception) {
 		LOGGER.error(exception.getMessage(), exception);
-
 		ErrorInfo errorInfo = new ErrorInfo();
 		errorInfo.setErrorCode(HttpStatus.BAD_REQUEST.value());
 		errorInfo.setErrorMessage(environment.getProperty(exception.getMessage(), exception.getMessage()));
-
 		return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
 	}
 
@@ -58,7 +53,6 @@ public class ExceptionControllerAdvice {
 	@ExceptionHandler({ MethodArgumentNotValidException.class, ConstraintViolationException.class })
 	public ResponseEntity<ErrorInfo> handleValidationExceptions(Exception exception) {
 		LOGGER.error(exception.getMessage(), exception);
-
 		String errorMsg;
 		if (exception instanceof MethodArgumentNotValidException manvException) {
 			errorMsg = manvException.getBindingResult().getAllErrors().stream().map(ObjectError::getDefaultMessage)
@@ -72,7 +66,6 @@ public class ExceptionControllerAdvice {
 		ErrorInfo errorInfo = new ErrorInfo();
 		errorInfo.setErrorCode(HttpStatus.BAD_REQUEST.value());
 		errorInfo.setErrorMessage(errorMsg);
-
 		return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
 	}
 
@@ -86,9 +79,7 @@ public class ExceptionControllerAdvice {
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<ErrorInfo> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
 		LOGGER.error("Data integrity violation", ex);
-
 		String rootMessage = ex.getRootCause() != null ? ex.getRootCause().getMessage() : ex.getMessage();
-
 		String errorMessage;
 		if (rootMessage != null && rootMessage.contains("Duplicate entry")
 				&& rootMessage.contains("transaction.transaction_number")) {
@@ -97,11 +88,9 @@ public class ExceptionControllerAdvice {
 		} else {
 			errorMessage = environment.getProperty("Transaction.DATA_INTEGRITY", "Database integrity violation");
 		}
-
 		ErrorInfo errorInfo = new ErrorInfo();
 		errorInfo.setErrorCode(HttpStatus.CONFLICT.value());
 		errorInfo.setErrorMessage(errorMessage);
-
 		return new ResponseEntity<>(errorInfo, HttpStatus.CONFLICT);
 	}
 }

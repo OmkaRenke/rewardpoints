@@ -17,29 +17,4 @@ public class MonthlyPointsMapper {
 	 * List of transactions made by the customer in this month.
 	 */
 	private List<TransactionResponseMapper> transactioList;
-
-	public String getMonth() {
-		return month;
-	}
-
-	public void setMonth(String month) {
-		this.month = month;
-	}
-
-	public int getPoints() {
-		return points;
-	}
-
-	public void setPoints(int points) {
-		this.points = points;
-	}
-
-	public List<TransactionResponseMapper> getTransactioList() {
-		return transactioList;
-	}
-
-	public void setTransactioList(List<TransactionResponseMapper> transactioList) {
-		this.transactioList = transactioList;
-	}
-
 }

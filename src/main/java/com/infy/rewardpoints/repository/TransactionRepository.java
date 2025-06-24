@@ -12,7 +12,6 @@ import com.infy.rewardpoints.models.Transaction;
  * retrieve transactions by customer and date range.
  */
 public interface TransactionRepository extends CrudRepository<Transaction, Long> {
-
 	/**
 	 * Retrieves all transactions for a given customer by their ID.
 	 *
@@ -20,7 +19,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
 	 * @return list of transactions made by the customer
 	 */
 	public List<Transaction> findByCustomerCustomerId(long customerId);
-
 	/**
 	 * Retrieves all transactions for a customer within a specific date range.
 	 * @param customerId the ID of the customer
@@ -30,5 +28,4 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
 	 */
 	List<Transaction> findByCustomerCustomerIdAndTransactionDateBetween(Long customerId, Timestamp startDate,
 			Timestamp endDate);
-
 }

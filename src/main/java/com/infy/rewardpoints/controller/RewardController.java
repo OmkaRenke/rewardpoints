@@ -70,7 +70,6 @@ public class RewardController {
 			throws RewardPointsException {
 		long transactionId = transactionService.saveTransaction(transactionDTO);
 		String message = environment.getProperty("API.TRANSACTION_SAVE_SUCCESS") + ":" + transactionId;
-
 		return new ResponseEntity<>(message, HttpStatus.CREATED);
 	}
 
@@ -85,7 +84,6 @@ public class RewardController {
 	public ResponseEntity<List<TransactionResponseMapper>> transactionsByCustomer(@PathVariable long customerId)
 			throws RewardPointsException {
 		List<TransactionResponseMapper> transactionDtos = transactionService.getTransactionsByCustomerId(customerId);
-
 		return new ResponseEntity<>(transactionDtos, HttpStatus.OK);
 	}
 

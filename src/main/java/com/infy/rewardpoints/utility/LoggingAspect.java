@@ -16,10 +16,8 @@ import com.infy.rewardpoints.exception.RewardPointsException;
 @Aspect
 public class LoggingAspect {
 	private static final Log LOGGER = LogFactory.getLog(LoggingAspect.class);
-
 	/**
 	 * Logs any RewardPointsException thrown by service implementation methods.
-	 * 
 	 * @param exception the exception thrown
 	 */
 	@AfterThrowing(pointcut = "execution (* com.infy.rewardpoints.service.*Impl.*(..))", throwing = "exception")

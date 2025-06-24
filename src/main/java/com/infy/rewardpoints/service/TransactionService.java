@@ -20,7 +20,6 @@ public interface TransactionService {
 	 *                               transactions
 	 */
 	public List<TransactionResponseMapper> getTransactionsByCustomerId(long customerId) throws RewardPointsException;
-
 	/**
 	 * Saves a transaction and calculates reward points based on the amount.
 	 *
@@ -29,7 +28,6 @@ public interface TransactionService {
 	 * @throws RewardPointsException if the customer is not found or data is invalid
 	 */
 	public long saveTransaction(TransactionDTO transactionDTO) throws RewardPointsException;
-
 	/**
 	 * Calculates the reward summary for a customer over the last 3 months, grouping
 	 * rewards by month and computing total reward points.
@@ -41,5 +39,4 @@ public interface TransactionService {
 	 */
 	public CustomerRewardSummaryMapper getCustomerRewardsLast3Months(long customerId, String startDate, String endDate)
 			throws RewardPointsException;
-
 }

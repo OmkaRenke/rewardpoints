@@ -20,9 +20,7 @@ import jakarta.transaction.Transactional;
 @Service(value = "customerService")
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
-
 	private ModelMapper modelMapper = new ModelMapper();
-
 	@Autowired
 	private CustomerRepository customerRepository;
 
@@ -43,5 +41,4 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = modelMapper.map(customerDTO, Customer.class);
 		return customerRepository.save(customer).getCustomerId();
 	}
-
 }

@@ -56,7 +56,6 @@ public class RewardControllerTest {
 	private CustomerService customerService = new CustomerServiceImpl();
 	@Autowired
 	private ObjectMapper objectMapper;
-
 	/**
 	 * Tests successful customer registration. Expects a 201 CREATED response with a
 	 * customer ID in the body.
@@ -67,9 +66,7 @@ public class RewardControllerTest {
 		customerDTO.setName("Test User");
 		customerDTO.setEmail("test@example.com");
 		customerDTO.setContact("9876543210");
-
 		Mockito.when(customerService.saveCustomer(any())).thenReturn(101L);
-
 		mockMvc.perform(post("/rewardpoint/register/customer").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(customerDTO))).andExpect(status().isCreated())
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("101")));
@@ -87,9 +84,7 @@ public class RewardControllerTest {
 		CustomerDTO cust = new CustomerDTO();
 		cust.setCustomerId(101L);
 		dto.setCustomerDTO(cust);
-
 		Mockito.when(transactionService.saveTransaction(any())).thenReturn(555L);
-
 		mockMvc.perform(post("/rewardpoint/save/transaction").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))).andExpect(status().isCreated())
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("555")));
@@ -103,7 +98,6 @@ public class RewardControllerTest {
 	@Test
 	void transactionsByCustomer_success() throws Exception {
 		long customerId = 123L;
-
 		TransactionResponseMapper txn = new TransactionResponseMapper();
 		txn.setTransactionId(1L);
 		txn.setTransactionNumber("TXN-001");
@@ -111,9 +105,7 @@ public class RewardControllerTest {
 		txn.setAmount(BigDecimal.valueOf(120));
 		txn.setTransactionDate(Timestamp.valueOf("2025-06-01 10:00:00"));
 		txn.setPointsEarned(90);
-
 		Mockito.when(transactionService.getTransactionsByCustomerId(customerId)).thenReturn(List.of(txn));
-
 		mockMvc.perform(get("/rewardpoint/customer/{customerId}", customerId)).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[0].transactionNumber", is("TXN-001")))
 				.andExpect(jsonPath("$[0].pointsEarned", is(90)));
@@ -126,10 +118,8 @@ public class RewardControllerTest {
 	@Test
 	void transactionsByCustomer_notFound() throws Exception {
 		long customerId = 999L;
-
 		Mockito.when(transactionService.getTransactionsByCustomerId(customerId))
 				.thenThrow(new com.infy.rewardpoints.exception.RewardPointsException("Service.CUSTOMER_NOT_FOUND"));
-
 		mockMvc.perform(get("/rewardpoint/customer/{customerId}", customerId)).andExpect(status().isBadRequest());
 	}
 
@@ -142,12 +132,10 @@ public class RewardControllerTest {
 		long customerId = 200L;
 		String startDate = "2025-04-01";
 		String endDate = "2025-06-30";
-
 		TransactionResponseMapper tx = new TransactionResponseMapper();
 		tx.setTransactionId(1L);
 		tx.setTransactionNumber("TXN1001");
 		tx.setPointsEarned(90);
-
 		MonthlyPointsMapper monthlyPoints = new MonthlyPointsMapper();
 		monthlyPoints.setMonth("2025 - April");
 		monthlyPoints.setPoints(90);
@@ -161,7 +149,6 @@ public class RewardControllerTest {
 
 		Mockito.when(transactionService.getCustomerRewardsLast3Months(customerId, startDate, endDate))
 				.thenReturn(summary);
-
 		mockMvc.perform(get("/rewardpoint/customer/summary").param("customerId", String.valueOf(customerId))
 				.param("startDate", startDate).param("endDate", endDate).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.customerId").value(200))
@@ -178,10 +165,8 @@ public class RewardControllerTest {
 	@Test
 	void getCustomerRewardSummary_invalidDate() throws Exception {
 		long customerId = 200L;
-
 		Mockito.when(transactionService.getCustomerRewardsLast3Months(anyLong(), anyString(), anyString()))
 				.thenThrow(new com.infy.rewardpoints.exception.RewardPointsException("Service.INVALID_DATE_FORMAT"));
-
 		mockMvc.perform(get("/rewardpoint/customer/summary").param("customerId", String.valueOf(customerId))
 				.param("startDate", "invalid-date").param("endDate", "2025-06-30")
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());

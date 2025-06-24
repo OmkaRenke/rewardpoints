@@ -6,9 +6,7 @@ package com.infy.rewardpoints.exception;
  * duplicate customers, invalid transactions, or missing data.
  */
 public class RewardPointsException extends Exception {
-
 	private static final long serialVersionUID = 1L;
-
 	public RewardPointsException(String message) {
 		super(message);
 	}
