@@ -42,6 +42,7 @@ public class RewardController {
 
 	@Autowired
 	private Environment environment;
+
 	/**
 	 * Registers a new customer.
 	 * 
@@ -50,25 +51,24 @@ public class RewardController {
 	 * @throws RewardPointsException if the customer already exists or validation
 	 *                               fails
 	 */
-	@PostMapping(value = "/register/customer")
-	public ResponseEntity<String> registerCustomer(@Valid @RequestBody CustomerDTO customerDTO)
+	@PostMapping(value = "/add/customer")
+	public ResponseEntity<String> addCustomer(@Valid @RequestBody CustomerDTO customerDTO)
 			throws RewardPointsException {
-		long customerId = customerService.saveCustomer(customerDTO);
+		long customerId = customerService.addCustomer(customerDTO);
 		String message = environment.getProperty("API.CUSTOMER_SAVE_SUCCESS") + ":" + customerId;
 		return new ResponseEntity<>(message, HttpStatus.CREATED);
 	}
 
 	/**
 	 * Saves a transaction and calculates reward points based on the amount.
-	 * 
-	 * @param transactionDTO transaction data
-	 * @return success message with transaction ID
-	 * @throws RewardPointsException if the customer is not found
+	 * @param transactionDTO the transaction details (excluding customer)
+	 * @param customerId     the ID of the customer to whom the transaction belongs
+	 * @return the ID of the saved transaction
 	 */
-	@PostMapping(value = "/save/transaction")
-	public ResponseEntity<String> saveTransaction(@Valid @RequestBody TransactionDTO transactionDTO)
-			throws RewardPointsException {
-		long transactionId = transactionService.saveTransaction(transactionDTO);
+	@PostMapping(value = "/add/transaction")
+	public ResponseEntity<String> addTransaction(@Valid @RequestBody TransactionDTO transactionDTO,
+			@RequestParam long customerId) throws RewardPointsException {
+		long transactionId = transactionService.addTransaction(transactionDTO, customerId);
 		String message = environment.getProperty("API.TRANSACTION_SAVE_SUCCESS") + ":" + transactionId;
 		return new ResponseEntity<>(message, HttpStatus.CREATED);
 	}

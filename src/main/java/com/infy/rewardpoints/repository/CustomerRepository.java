@@ -16,5 +16,4 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 	 * @return an Optional containing the customer, if found
 	 */
 	Optional<Customer> findByEmail(String email);
-
 }

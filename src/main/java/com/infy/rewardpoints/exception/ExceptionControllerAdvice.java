@@ -1,7 +1,6 @@
-package com.infy.rewardpoints.utility;
+package com.infy.rewardpoints.exception;
 
 import java.util.stream.Collectors;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.infy.rewardpoints.exception.RewardPointsException;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -28,6 +25,7 @@ public class ExceptionControllerAdvice {
 	private static final Log LOGGER = LogFactory.getLog(ExceptionControllerAdvice.class);
 	@Autowired
 	private Environment environment;
+
 	/**
 	 * Handles custom {@link RewardPointsException} and maps to a user-friendly
 	 * error message.

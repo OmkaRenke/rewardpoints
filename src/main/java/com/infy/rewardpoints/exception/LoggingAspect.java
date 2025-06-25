@@ -1,12 +1,10 @@
-package com.infy.rewardpoints.utility;
+package com.infy.rewardpoints.exception;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-
-import com.infy.rewardpoints.exception.RewardPointsException;
 
 /**
  * Aspect for logging exceptions thrown from service implementation classes.

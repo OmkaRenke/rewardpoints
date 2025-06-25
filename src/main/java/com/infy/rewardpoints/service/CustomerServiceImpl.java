@@ -33,7 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
 	 *                               exists
 	 */
 	@Override
-	public long saveCustomer(CustomerDTO customerDTO) throws RewardPointsException {
+	public long addCustomer(CustomerDTO customerDTO) throws RewardPointsException {
 		Optional<Customer> existingCustomer = customerRepository.findByEmail(customerDTO.getEmail());
 		if (existingCustomer.isPresent()) {
 			throw new RewardPointsException("SERVICE.CUSTOMER.EXISTS");

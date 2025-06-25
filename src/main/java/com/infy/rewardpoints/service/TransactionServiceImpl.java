@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,12 +62,12 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	/**
-	 * Saves a new transaction and calculates reward points based on the transaction
+	 * Adds a new transaction and calculates reward points based on the transaction
 	 * amount.
 	 */
 	@Override
-	public long saveTransaction(TransactionDTO transactionDTO) throws RewardPointsException {
-		Optional<Customer> optCustomer = customerRepository.findById(transactionDTO.getCustomerDTO().getCustomerId());
+	public long addTransaction(TransactionDTO transactionDTO, long customerId) throws RewardPointsException {
+		Optional<Customer> optCustomer = customerRepository.findById(customerId);
 		Customer customer = optCustomer.orElseThrow(() -> new RewardPointsException("Service.CUSTOMER_NOT_FOUND"));
 		Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
 		transaction.setCustomer(customer);
@@ -128,7 +128,8 @@ public class TransactionServiceImpl implements TransactionService {
 			List<TransactionResponseMapper> dtoList = monthTransactions.stream()
 					.map(tx -> modelMapper.map(tx, TransactionResponseMapper.class)).toList();
 			MonthlyPointsMapper mpDTO = new MonthlyPointsMapper();
-			mpDTO.setMonth(ym.format(DateTimeFormatter.ofPattern("yyyy - MMMM", Locale.ENGLISH)));
+			mpDTO.setMonth(ym.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
+			mpDTO.setYear(String.valueOf(ym.getYear()));
 			mpDTO.setPoints(monthPoints);
 			mpDTO.setTransactioList(dtoList);
 			monthlyRewards.add(mpDTO);

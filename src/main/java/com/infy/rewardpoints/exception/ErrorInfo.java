@@ -1,4 +1,4 @@
-package com.infy.rewardpoints.utility;
+package com.infy.rewardpoints.exception;
 
 import lombok.Data;
 
@@ -16,4 +16,5 @@ public class ErrorInfo {
 	 * Application-specific error code (optional).
 	 */
 	private Integer errorCode;
+
 }

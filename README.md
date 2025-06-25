@@ -65,8 +65,8 @@ mvn spring-boot:run
 
 ##  APIs
 
-###  1. Register Customer
-**POST** `/rewardpoint/register/customer`
+###  1. Add Customer
+**POST** `/rewardpoint/add/customer`
 
 **Request Body**
 ```json
@@ -84,8 +84,8 @@ Customer registered successfully:104
 
 ---
 
-### 2. Save Transaction
-**POST** `/rewardpoint/save/transaction`
+### 2. Add Transaction
+**POST** `/rewardpoint/add/transaction?customerId=100`
 
 **Request Body**
 ```json
@@ -93,10 +93,7 @@ Customer registered successfully:104
   "transactionNumber": "TXN04",
   "transactionMode": "UPI",
   "amount": 150.00,
-  "transactionDate": "2025-05-19T10:00:00",
-  "customerDTO": {
-    "customerId": 104
-  }
+  "transactionDate": "2025-05-19T10:00:00"
 }
 ```
 
@@ -162,7 +159,8 @@ Transaction saved successfully:7
     "customerName": "Kevin",
     "monthlyRewards": [
         {
-            "month": "2025 - June",
+            "year": "2025",
+            "month": "June",
             "points": 0,
             "transactioList": [
                 {
@@ -176,7 +174,8 @@ Transaction saved successfully:7
             ]
         },
         {
-            "month": "2025 - May",
+            "year": "2025",
+            "month": "May",
             "points": 255,
             "transactioList": [
                 {
@@ -198,7 +197,8 @@ Transaction saved successfully:7
             ]
         },
         {
-            "month": "2025 - April",
+            "year": "2025",
+            "month": "April",
             "points": 90,
             "transactioList": [
                 {

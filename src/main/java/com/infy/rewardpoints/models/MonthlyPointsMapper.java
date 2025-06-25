@@ -11,6 +11,7 @@ import lombok.Data;
  */
 @Data
 public class MonthlyPointsMapper {
+	private String year;
 	private String month;
 	private int points;
 	/**

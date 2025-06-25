@@ -26,6 +26,5 @@ public class TransactionDTO {
 	private Timestamp transactionDate;
 	@Min(value = 0, message = "transaction.points.invalid")
 	private int pointsEarned;
-	@NotNull(message = "transaction.customer.required")
 	private CustomerDTO customerDTO;
 }
