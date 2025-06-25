@@ -81,8 +81,8 @@ public class TransactionServiceImpl implements TransactionService {
 		} else {
 			transaction.setPointsEarned(0);
 		}
-		transactionRepository.save(transaction);
-		return transaction.getTransactionId();
+		Transaction savedTransaction = transactionRepository.save(transaction);
+		return savedTransaction.getTransactionId();
 	}
 
 	/**

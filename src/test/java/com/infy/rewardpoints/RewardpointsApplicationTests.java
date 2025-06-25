@@ -2,6 +2,7 @@ package com.infy.rewardpoints;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -167,7 +168,7 @@ class RewardpointsApplicationTests {
 	void getCustomerRewardsLast3Months_Valid() throws RewardPointsException {
 		Long customerId = 204L;
 		String startDate = "2025-04-01";
-		String endDate = "2025-06-30";
+		String endDate = "2025-06-20";
 
 		Customer customer = new Customer();
 		customer.setCustomerId(customerId);
@@ -186,7 +187,7 @@ class RewardpointsApplicationTests {
 		List<Transaction> mockTransactions = List.of(transac1, transac2);
 
 		Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
-		Mockito.when(transactionRepository.findByCustomerCustomerIdAndTransactionDateBetween(customerId,
+		Mockito.when(transactionRepository.findByCustomerCustomerIdAndTransactionDateBetween(eq(customerId),
 				any(Timestamp.class), any(Timestamp.class))).thenReturn(mockTransactions);
 
 		CustomerRewardSummaryMapper response = transactionService.getCustomerRewardsLast3Months(customerId, startDate,
@@ -203,7 +204,7 @@ class RewardpointsApplicationTests {
 	void getCustomerRewardsLast3Months_CustomerNotFound() {
 		Long customerId = 999L;
 		String startDate = "2025-04-01";
-		String endDate = "2025-06-30";
+		String endDate = "2025-06-20";
 
 		Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
 
@@ -218,15 +219,18 @@ class RewardpointsApplicationTests {
 	void getCustomerRewardsLast3Months_NoTransactionsFound() {
 		Long customerId = 204L;
 		String startDate = "2025-04-01";
-		String endDate = "2025-06-30";
+		String endDate = "2025-06-20";
 
 		Customer customer = new Customer();
 		customer.setCustomerId(customerId);
 		customer.setName("Kevin");
 
+		// This list simulates what your DB would return for
+		List<Transaction> mockTransactions = List.of();
+
 		Mockito.when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
-		Mockito.when(transactionRepository.findByCustomerCustomerIdAndTransactionDateBetween(customerId,
-				any(Timestamp.class), any(Timestamp.class))).thenReturn(Collections.emptyList());
+		Mockito.when(transactionRepository.findByCustomerCustomerIdAndTransactionDateBetween(eq(customerId),
+				any(Timestamp.class), any(Timestamp.class))).thenReturn(mockTransactions);
 
 		RewardPointsException exception = assertThrows(RewardPointsException.class,
 				() -> transactionService.getCustomerRewardsLast3Months(customerId, startDate, endDate));

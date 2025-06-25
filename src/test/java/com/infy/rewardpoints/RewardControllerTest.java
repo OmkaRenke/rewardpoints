@@ -1,175 +1,214 @@
 package com.infy.rewardpoints;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.infy.rewardpoints.controller.RewardController;
+import com.infy.rewardpoints.exception.RewardPointsException;
+import com.infy.rewardpoints.models.CustomerDTO;
+import com.infy.rewardpoints.models.CustomerRewardSummaryMapper;
+import com.infy.rewardpoints.models.TransactionDTO;
+import com.infy.rewardpoints.models.TransactionResponseMapper;
+import com.infy.rewardpoints.service.CustomerService;
+import com.infy.rewardpoints.service.TransactionService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.infy.rewardpoints.controller.RewardController;
-import com.infy.rewardpoints.models.CustomerDTO;
-import com.infy.rewardpoints.models.CustomerRewardSummaryMapper;
-import com.infy.rewardpoints.models.MonthlyPointsMapper;
-import com.infy.rewardpoints.models.TransactionDTO;
-import com.infy.rewardpoints.models.TransactionResponseMapper;
-import com.infy.rewardpoints.repository.CustomerRepository;
-import com.infy.rewardpoints.repository.TransactionRepository;
-import com.infy.rewardpoints.service.CustomerService;
-import com.infy.rewardpoints.service.CustomerServiceImpl;
-import com.infy.rewardpoints.service.TransactionService;
-import com.infy.rewardpoints.service.TransactionServiceImpl;
+class RewardControllerTest {
 
-/**
- * Unit tests for RewardController using MockMvc and Mockito. Covers customer
- * registration, transaction creation, and reward summaries.
- */
-@WebMvcTest(RewardController.class)
-public class RewardControllerTest {
-	@Autowired
-	private MockMvc mockMvc;
-	@Mock
-	private CustomerRepository customerRepository;
-	@Mock
-	private TransactionRepository transactionRepository;
 	@InjectMocks
-	private TransactionService transactionService = new TransactionServiceImpl();
-	@InjectMocks
-	private CustomerService customerService = new CustomerServiceImpl();
-	@Autowired
-	private ObjectMapper objectMapper;
-	/**
-	 * Tests successful customer registration. Expects a 201 CREATED response with a
-	 * customer ID in the body.
-	 */
-	@Test
-	void registerCustomer_success() throws Exception {
-		CustomerDTO customerDTO = new CustomerDTO();
-		customerDTO.setName("Test User");
-		customerDTO.setEmail("test@example.com");
-		customerDTO.setContact("9876543210");
-		Mockito.when(customerService.saveCustomer(any())).thenReturn(101L);
-		mockMvc.perform(post("/rewardpoint/register/customer").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(customerDTO))).andExpect(status().isCreated())
-				.andExpect(content().string(org.hamcrest.Matchers.containsString("101")));
+	private RewardController rewardController;
+
+	@Mock
+	private CustomerService customerService;
+
+	@Mock
+	private TransactionService transactionService;
+
+	@Mock
+	private Environment environment;
+
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
 	}
 
-	/**
-	 * Tests successful transaction creation and point calculation. Expects a 201
-	 * CREATED response with a transaction ID in the response body.
-	 */
+	// Test: Register Customer
 	@Test
-	void saveTransaction_success() throws Exception {
+	void testRegisterCustomer_Valid() throws RewardPointsException {
+		CustomerDTO dto = new CustomerDTO();
+		dto.setName("Test User");
+		dto.setContact("9876543210");
+		dto.setEmail("test@example.com");
+
+		when(customerService.saveCustomer(dto)).thenReturn(101L);
+		when(environment.getProperty("API.CUSTOMER_SAVE_SUCCESS")).thenReturn("Customer Registered Successfully");
+
+		ResponseEntity<String> response = rewardController.registerCustomer(dto);
+
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertEquals("Customer Registered Successfully:101", response.getBody());
+	}
+
+	// Test: Save Transaction
+	@Test
+	void testSaveTransaction_Valid() throws RewardPointsException {
 		TransactionDTO dto = new TransactionDTO();
-		dto.setTransactionId(1L);
-		dto.setAmount(new java.math.BigDecimal("120"));
+		dto.setAmount(BigDecimal.valueOf(150));
+		dto.setTransactionNumber("TXN04");
+		dto.setTransactionMode("UPI");
+		dto.setTransactionDate(Timestamp.valueOf("2025-05-19 10:00:00"));
+
 		CustomerDTO cust = new CustomerDTO();
-		cust.setCustomerId(101L);
+		cust.setCustomerId(104L);
 		dto.setCustomerDTO(cust);
-		Mockito.when(transactionService.saveTransaction(any())).thenReturn(555L);
-		mockMvc.perform(post("/rewardpoint/save/transaction").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(dto))).andExpect(status().isCreated())
-				.andExpect(content().string(org.hamcrest.Matchers.containsString("555")));
+
+		when(transactionService.saveTransaction(dto)).thenReturn(7L);
+		when(environment.getProperty("API.TRANSACTION_SAVE_SUCCESS")).thenReturn("Transaction saved successfully");
+
+		ResponseEntity<String> response = rewardController.saveTransaction(dto);
+
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertEquals("Transaction saved successfully:7", response.getBody());
 	}
 
-	/**
-	 * Tests successful retrieval of all transactions by a given customer ID.
-	 * Expects a 200 OK with transaction data including points and transaction
-	 * number.
-	 */
+	// Test: Get All Transactions by Customer
 	@Test
-	void transactionsByCustomer_success() throws Exception {
-		long customerId = 123L;
-		TransactionResponseMapper txn = new TransactionResponseMapper();
-		txn.setTransactionId(1L);
-		txn.setTransactionNumber("TXN-001");
-		txn.setTransactionMode("CARD");
-		txn.setAmount(BigDecimal.valueOf(120));
-		txn.setTransactionDate(Timestamp.valueOf("2025-06-01 10:00:00"));
-		txn.setPointsEarned(90);
-		Mockito.when(transactionService.getTransactionsByCustomerId(customerId)).thenReturn(List.of(txn));
-		mockMvc.perform(get("/rewardpoint/customer/{customerId}", customerId)).andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[0].transactionNumber", is("TXN-001")))
-				.andExpect(jsonPath("$[0].pointsEarned", is(90)));
+	void testTransactionsByCustomer_Valid() throws RewardPointsException {
+		long customerId = 100L;
+
+		TransactionResponseMapper tx1 = new TransactionResponseMapper();
+		tx1.setTransactionId(1L);
+		tx1.setTransactionNumber("TXN1001");
+		tx1.setTransactionMode("CARD");
+		tx1.setAmount(BigDecimal.valueOf(120));
+		tx1.setTransactionDate(Timestamp.valueOf("2025-04-10 10:00:00"));
+		tx1.setPointsEarned(90);
+
+		when(transactionService.getTransactionsByCustomerId(customerId)).thenReturn(List.of(tx1));
+
+		ResponseEntity<List<TransactionResponseMapper>> response = rewardController.transactionsByCustomer(customerId);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(1, response.getBody().size());
+		assertEquals("TXN1001", response.getBody().get(0).getTransactionNumber());
 	}
 
-	/**
-	 * Tests scenario where transactions are not found for the customer. Expects a
-	 * 400 BAD REQUEST response with appropriate error handling.
-	 */
+	// Test: Get Monthly Reward Summary
 	@Test
-	void transactionsByCustomer_notFound() throws Exception {
-		long customerId = 999L;
-		Mockito.when(transactionService.getTransactionsByCustomerId(customerId))
-				.thenThrow(new com.infy.rewardpoints.exception.RewardPointsException("Service.CUSTOMER_NOT_FOUND"));
-		mockMvc.perform(get("/rewardpoint/customer/{customerId}", customerId)).andExpect(status().isBadRequest());
-	}
-
-	/**
-	 * Tests reward summary API with valid customer and date range. Expects a 200 OK
-	 * response with monthly breakdown and total points.
-	 */
-	@Test
-	void getCustomerRewardSummary_success() throws Exception {
-		long customerId = 200L;
+	void testGetCustomerRewardSummary_Valid() throws RewardPointsException {
+		long customerId = 100L;
 		String startDate = "2025-04-01";
 		String endDate = "2025-06-30";
-		TransactionResponseMapper tx = new TransactionResponseMapper();
-		tx.setTransactionId(1L);
-		tx.setTransactionNumber("TXN1001");
-		tx.setPointsEarned(90);
-		MonthlyPointsMapper monthlyPoints = new MonthlyPointsMapper();
-		monthlyPoints.setMonth("2025 - April");
-		monthlyPoints.setPoints(90);
-		monthlyPoints.setTransactioList(List.of(tx));
 
 		CustomerRewardSummaryMapper summary = new CustomerRewardSummaryMapper();
 		summary.setCustomerId(customerId);
-		summary.setCustomerName("Test Customer");
-		summary.setMonthlyRewards(List.of(monthlyPoints));
-		summary.setTotalPoints(90);
+		summary.setCustomerName("Kevin");
+		summary.setTotalPoints(115);
 
-		Mockito.when(transactionService.getCustomerRewardsLast3Months(customerId, startDate, endDate))
-				.thenReturn(summary);
-		mockMvc.perform(get("/rewardpoint/customer/summary").param("customerId", String.valueOf(customerId))
-				.param("startDate", startDate).param("endDate", endDate).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.customerId").value(200))
-				.andExpect(jsonPath("$.totalPoints").value(90))
-				.andExpect(jsonPath("$.monthlyRewards[0].month").value("2025 - April"))
-				.andExpect(jsonPath("$.monthlyRewards[0].points").value(90))
-				.andExpect(jsonPath("$.monthlyRewards[0].transactioList[0].transactionNumber").value("TXN1001"));
+		when(transactionService.getCustomerRewardsLast3Months(customerId, startDate, endDate)).thenReturn(summary);
+
+		ResponseEntity<CustomerRewardSummaryMapper> response = rewardController
+				.getAllCustomerRewardSummaries(customerId, startDate, endDate);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(115, response.getBody().getTotalPoints());
+		assertEquals("Kevin", response.getBody().getCustomerName());
 	}
 
-	/**
-	 * Tests reward summary API with an invalid start date. Expects a 400 BAD
-	 * REQUEST response due to bad date format.
-	 */
+	// Test: Register Customer - Already Exists (throws exception)
 	@Test
-	void getCustomerRewardSummary_invalidDate() throws Exception {
-		long customerId = 200L;
-		Mockito.when(transactionService.getCustomerRewardsLast3Months(anyLong(), anyString(), anyString()))
-				.thenThrow(new com.infy.rewardpoints.exception.RewardPointsException("Service.INVALID_DATE_FORMAT"));
-		mockMvc.perform(get("/rewardpoint/customer/summary").param("customerId", String.valueOf(customerId))
-				.param("startDate", "invalid-date").param("endDate", "2025-06-30")
-				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+	void testRegisterCustomer_AlreadyExists() throws RewardPointsException {
+		CustomerDTO dto = new CustomerDTO();
+		dto.setName("John");
+		dto.setEmail("john@example.com");
+		dto.setContact("1234567890");
+
+		when(customerService.saveCustomer(dto)).thenThrow(new RewardPointsException("Service.CUSTOMER_ALREADY_EXISTS"));
+
+		RewardPointsException ex = assertThrows(RewardPointsException.class, () -> {
+			rewardController.registerCustomer(dto);
+		});
+
+		assertEquals("Service.CUSTOMER_ALREADY_EXISTS", ex.getMessage());
+	}
+
+	// Test: Save Transaction - Customer Not Found
+	@Test
+	void testSaveTransaction_CustomerNotFound() throws RewardPointsException {
+		TransactionDTO dto = new TransactionDTO();
+		dto.setAmount(BigDecimal.valueOf(90));
+		dto.setTransactionNumber("TXN404");
+		dto.setTransactionDate(Timestamp.valueOf("2025-05-01 10:00:00"));
+		CustomerDTO cust = new CustomerDTO();
+		cust.setCustomerId(999L);
+		dto.setCustomerDTO(cust);
+
+		when(transactionService.saveTransaction(dto))
+				.thenThrow(new RewardPointsException("Service.CUSTOMER_NOT_FOUND"));
+
+		RewardPointsException ex = assertThrows(RewardPointsException.class, () -> {
+			rewardController.saveTransaction(dto);
+		});
+
+		assertEquals("Service.CUSTOMER_NOT_FOUND", ex.getMessage());
+	}
+
+	// Test: Get Transactions by Customer - Not Found
+	@Test
+	void testTransactionsByCustomer_NotFound() throws RewardPointsException {
+		long customerId = 999L;
+
+		when(transactionService.getTransactionsByCustomerId(customerId))
+				.thenThrow(new RewardPointsException("Service.CUSTOMER_NOT_FOUND"));
+
+		RewardPointsException ex = assertThrows(RewardPointsException.class, () -> {
+			rewardController.transactionsByCustomer(customerId);
+		});
+
+		assertEquals("Service.CUSTOMER_NOT_FOUND", ex.getMessage());
+	}
+
+	// Test: Get Customer Summary - Invalid Date Format
+	@Test
+	void testGetCustomerSummary_InvalidDate() throws RewardPointsException {
+		long customerId = 100L;
+		String invalidStart = "abc-date";
+		String validEnd = "2025-06-30";
+
+		when(transactionService.getCustomerRewardsLast3Months(customerId, invalidStart, validEnd))
+				.thenThrow(new RewardPointsException("Service.INVALID_DATE_FORMAT"));
+
+		RewardPointsException ex = assertThrows(RewardPointsException.class, () -> {
+			rewardController.getAllCustomerRewardSummaries(customerId, invalidStart, validEnd);
+		});
+
+		assertEquals("Service.INVALID_DATE_FORMAT", ex.getMessage());
+	}
+
+	// Test: Get Customer Summary - Start Date After End Date
+	@Test
+	void testGetCustomerSummary_StartDateAfterEndDate() throws RewardPointsException {
+		long customerId = 100L;
+		String startDate = "2025-07-01";
+		String endDate = "2025-06-01";
+
+		when(transactionService.getCustomerRewardsLast3Months(customerId, startDate, endDate))
+				.thenThrow(new RewardPointsException("Service.START_DATE_AFTER_END"));
+
+		RewardPointsException ex = assertThrows(RewardPointsException.class, () -> {
+			rewardController.getAllCustomerRewardSummaries(customerId, startDate, endDate);
+		});
+
+		assertEquals("Service.START_DATE_AFTER_END", ex.getMessage());
 	}
 
 }
